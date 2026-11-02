@@ -41,3 +41,12 @@ export interface Trip {
     total?: string;
   };
 }
+
+export interface HelpEntry {
+  id: string;
+  title: string;
+  text: string;
+  order: number;
+  updatedAt: string;
+  translations: Record<string, { title: string; text: string }>;
+}

@@ -7,7 +7,9 @@ Next.js-App (PWA) für Vercel:
 - **Pflegerin** (`/einkauf`): sieht alles in ihrer Sprache, z. B. **Хліб** / Brot. Sprache wird vom Handy erkannt
   und ist oben umstellbar. Antippen = abhaken. „Einkauf fertig“ → Kassenzettel fotografieren → Abgleich:
   ✅ auf dem Zettel · ❓ abgehakt aber nicht gefunden · ➕ auf dem Zettel aber nicht abgehakt.
-- **Admin** (`/admin`): Listen & Einträge bearbeiten, Historie aller Einkäufe mit Kassenzettel-Foto, Suche, CSV-Export.
+- **Admin** (`/admin`): Listen & Einträge bearbeiten, Historie aller Einkäufe mit Kassenzettel-Foto, Suche, CSV-Export,
+  Tab **Hilfe**: Hinweise für die Pflegerin schreiben (mit Übersetzungs-Vorschau).
+- **Hilfe für die Pflegerin** (`/einkauf/hilfe`, ℹ️-Knopf): alle Hinweise übersetzt in ihre Sprache, deutsches Original aufklappbar.
 
 ## Was kostet was?
 

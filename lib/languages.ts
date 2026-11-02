@@ -48,6 +48,10 @@ type Strings = {
   saved: string;
   nothingChecked: string;
   scanFailed: string;
+  help: string;
+  back: string;
+  original: string;
+  noHelp: string;
 };
 
 const S: Record<string, Strings> = {
@@ -68,6 +72,10 @@ const S: Record<string, Strings> = {
     saved: "Gespeichert ✔",
     nothingChecked: "Bitte zuerst gekaufte Sachen abhaken.",
     scanFailed: "Zettel konnte nicht gelesen werden.",
+    help: "Hilfe",
+    back: "Zurück",
+    original: "Deutsches Original",
+    noHelp: "Noch keine Hinweise.",
   },
   uk: {
     title: "Покупки",
@@ -86,6 +94,10 @@ const S: Record<string, Strings> = {
     saved: "Збережено ✔",
     nothingChecked: "Спочатку відмітьте куплені товари.",
     scanFailed: "Не вдалося прочитати чек.",
+    help: "Довідка",
+    back: "Назад",
+    original: "Оригінал німецькою",
+    noHelp: "Поки що немає підказок.",
   },
   ru: {
     title: "Покупки",
@@ -104,6 +116,10 @@ const S: Record<string, Strings> = {
     saved: "Сохранено ✔",
     nothingChecked: "Сначала отметьте купленные товары.",
     scanFailed: "Не удалось прочитать чек.",
+    help: "Справка",
+    back: "Назад",
+    original: "Оригинал на немецком",
+    noHelp: "Пока нет подсказок.",
   },
   pl: {
     title: "Zakupy",
@@ -122,6 +138,10 @@ const S: Record<string, Strings> = {
     saved: "Zapisano ✔",
     nothingChecked: "Najpierw zaznacz kupione rzeczy.",
     scanFailed: "Nie udało się odczytać paragonu.",
+    help: "Pomoc",
+    back: "Wstecz",
+    original: "Oryginał po niemiecku",
+    noHelp: "Brak wskazówek.",
   },
   ro: {
     title: "Cumpărături",
@@ -140,6 +160,10 @@ const S: Record<string, Strings> = {
     saved: "Salvat ✔",
     nothingChecked: "Bifează mai întâi produsele cumpărate.",
     scanFailed: "Bonul nu a putut fi citit.",
+    help: "Ajutor",
+    back: "Înapoi",
+    original: "Originalul în germană",
+    noHelp: "Încă nu există indicații.",
   },
   en: {
     title: "Shopping",
@@ -158,6 +182,10 @@ const S: Record<string, Strings> = {
     saved: "Saved ✔",
     nothingChecked: "Please check the bought items first.",
     scanFailed: "Could not read the receipt.",
+    help: "Help",
+    back: "Back",
+    original: "German original",
+    noHelp: "No notes yet.",
   },
 };
 

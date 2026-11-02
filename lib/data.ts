@@ -1,5 +1,5 @@
 import { store } from "./store";
-import type { Item, ShopList, Trip } from "./types";
+import type { HelpEntry, Item, ShopList, Trip } from "./types";
 
 export const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const parse = <T>(v: string | null | undefined): T | null => {
@@ -74,4 +74,22 @@ export async function cachedTranslation(lang: string, text: string) {
 }
 export async function cacheTranslation(lang: string, text: string, tr: string) {
   await store().hset("tr:" + lang, text.trim().toLowerCase(), tr);
+}
+
+// Hilfe-Texte für die Pflegerin
+export async function getHelp(): Promise<HelpEntry[]> {
+  const raw = await store().hgetall("help");
+  return Object.values(raw)
+    .map((v) => parse<HelpEntry>(v)!)
+    .filter(Boolean)
+    .sort((a, b) => a.order - b.order || a.updatedAt.localeCompare(b.updatedAt));
+}
+export async function getHelpEntry(id: string) {
+  return parse<HelpEntry>(await store().hget("help", id));
+}
+export async function saveHelp(h: HelpEntry) {
+  await store().hset("help", h.id, JSON.stringify(h));
+}
+export async function deleteHelp(id: string) {
+  await store().hdel("help", id);
 }

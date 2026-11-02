@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import ListEditor from "@/components/ListEditor";
+import HelpEditor from "@/components/HelpEditor";
 import { api } from "@/lib/api";
 import type { Trip } from "@/lib/types";
 
 export default function Admin() {
-  const [tab, setTab] = useState<"lists" | "history">("lists");
+  const [tab, setTab] = useState<"lists" | "history" | "help">("lists");
   const [role, setRole] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
@@ -39,8 +40,11 @@ export default function Admin() {
       <div className="tabs">
         <button className={"tab" + (tab === "lists" ? " on" : "")} onClick={() => setTab("lists")}>Listen</button>
         <button className={"tab" + (tab === "history" ? " on" : "")} onClick={() => setTab("history")}>Historie</button>
+        <button className={"tab" + (tab === "help" ? " on" : "")} onClick={() => setTab("help")}>Hilfe</button>
       </div>
-      {tab === "lists" ? <ListEditor admin /> : <History />}
+      {tab === "lists" && <ListEditor admin />}
+      {tab === "history" && <History />}
+      {tab === "help" && <HelpEditor />}
       <Invite />
     </main>
   );

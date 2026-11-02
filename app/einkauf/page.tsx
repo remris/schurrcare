@@ -74,6 +74,7 @@ export default function Einkauf() {
     <main className="page pflege">
       <header className="top">
         <h1>🛒 {s.title}</h1>
+        <a href="/einkauf/hilfe" className="btn small" aria-label={s.help}>ℹ️ {s.help}</a>
         <select value={lang} onChange={(e) => setLang(e.target.value)} aria-label={s.language}>
           {LANGUAGES.map((l) => (
             <option key={l.code} value={l.code}>
