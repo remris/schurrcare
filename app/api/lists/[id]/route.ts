@@ -2,7 +2,7 @@ import { handle, requireRole } from "@/lib/auth";
 import { deleteList, getList, saveList } from "@/lib/data";
 
 export const PATCH = handle(async (req, ctx) => {
-  await requireRole();
+  await requireRole("oma");
   const { id } = await ctx.params;
   const list = await getList(id);
   if (!list) return Response.json({ error: "Nicht gefunden" }, { status: 404 });
@@ -14,7 +14,7 @@ export const PATCH = handle(async (req, ctx) => {
 });
 
 export const DELETE = handle(async (_req, ctx) => {
-  await requireRole();
+  await requireRole("oma");
   const { id } = await ctx.params;
   await deleteList(id);
   return Response.json({ ok: true });

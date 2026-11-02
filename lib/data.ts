@@ -1,5 +1,5 @@
 import { store } from "./store";
-import type { HelpEntry, Item, ShopList, Trip } from "./types";
+import type { Doc, HelpEntry, Item, ShopList, Trip } from "./types";
 
 export const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 const parse = <T>(v: string | null | undefined): T | null => {
@@ -92,4 +92,32 @@ export async function saveHelp(h: HelpEntry) {
 }
 export async function deleteHelp(id: string) {
   await store().hdel("help", id);
+}
+
+// Verträge / Dokumente (nur Admin). Metadaten im Hash "docs", jede Seite einzeln unter "docpage:<id>".
+export async function getDocs(): Promise<Doc[]> {
+  const raw = await store().hgetall("docs");
+  return Object.values(raw)
+    .map((v) => parse<Doc>(v)!)
+    .filter(Boolean)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+export async function getDoc(id: string) {
+  return parse<Doc>(await store().hget("docs", id));
+}
+export async function saveDoc(d: Doc) {
+  await store().hset("docs", d.id, JSON.stringify(d));
+}
+export async function deleteDoc(d: Doc) {
+  for (const p of d.pages) await store().del("docpage:" + p.id);
+  await store().hdel("docs", d.id);
+}
+export async function getDocPage(pageId: string) {
+  return store().get("docpage:" + pageId);
+}
+export async function saveDocPage(pageId: string, dataUrl: string) {
+  await store().set("docpage:" + pageId, dataUrl);
+}
+export async function deleteDocPage(pageId: string) {
+  await store().del("docpage:" + pageId);
 }

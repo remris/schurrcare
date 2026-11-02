@@ -4,7 +4,7 @@ import type { Item } from "@/lib/types";
 
 // POST { listId, texts: string[] }  – mehrere Einträge auf einmal (z.B. "Brot, Milch und Butter")
 export const POST = handle(async (req) => {
-  const role = await requireRole();
+  const role = await requireRole("oma");
   const body = await req.json();
   if (!(await getList(String(body.listId)))) return Response.json({ error: "Liste fehlt" }, { status: 400 });
   const texts: string[] = (Array.isArray(body.texts) ? body.texts : [body.text])

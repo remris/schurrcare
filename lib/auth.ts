@@ -4,7 +4,7 @@ import type { Role } from "./types";
 
 const COOKIE = "sc_session";
 const secret = () =>
-  process.env.AUTH_SECRET || `${process.env.ADMIN_PASSWORD ?? ""}|${process.env.ACCESS_CODE ?? ""}|schnurrcare`;
+  process.env.AUTH_SECRET || `${process.env.ADMIN_PASSWORD ?? ""}|${process.env.OMA_CODE ?? ""}|${process.env.PFLEGE_CODE ?? ""}|schnurrcare`;
 
 const sign = (payload: string) => createHmac("sha256", secret()).update(payload).digest("base64url");
 
@@ -18,7 +18,9 @@ export function checkCode(code: string): Role | null {
   const c = code.trim();
   if (!c) return null;
   if (process.env.ADMIN_PASSWORD && safeEqual(c, process.env.ADMIN_PASSWORD)) return "admin";
-  if (process.env.ACCESS_CODE && safeEqual(c.toLowerCase(), process.env.ACCESS_CODE.toLowerCase())) return "family";
+  const lc = c.toLowerCase();
+  if (process.env.OMA_CODE && safeEqual(lc, process.env.OMA_CODE.trim().toLowerCase())) return "oma";
+  if (process.env.PFLEGE_CODE && safeEqual(lc, process.env.PFLEGE_CODE.trim().toLowerCase())) return "pflege";
   return null;
 }
 
@@ -46,17 +48,23 @@ export async function getRole(): Promise<Role | null> {
   if (!role || !exp || !sig) return null;
   if (!safeEqual(sig, sign(`${role}.${exp}`))) return null;
   if (Number(exp) < Date.now()) return null;
-  return role === "admin" || role === "family" ? role : null;
+  return role === "admin" || role === "oma" || role === "pflege" ? role : null;
 }
 
-/** Wirft eine 401-Response, wenn nicht eingeloggt (admin darf alles). */
-export async function requireRole(need: Role = "family"): Promise<Role> {
+/** Startseite je Rolle */
+export const HOME: Record<Role, string> = { oma: "/oma", pflege: "/einkauf", admin: "/admin" };
+
+/**
+ * Prüft die Rolle. Admin darf immer alles.
+ * 401 = nicht eingeloggt, 403 = eingeloggt, aber nicht berechtigt.
+ */
+export async function requireRole(...allowed: Role[]): Promise<Role> {
   const role = await getRole();
-  if (!role || (need === "admin" && role !== "admin")) {
-    throw new Response(JSON.stringify({ error: "unauthorized" }), {
-      status: 401,
-      headers: { "content-type": "application/json" },
-    });
+  if (!role) {
+    throw Response.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (role !== "admin" && !allowed.includes(role)) {
+    throw Response.json({ error: "Kein Zugriff" }, { status: 403 });
   }
   return role;
 }

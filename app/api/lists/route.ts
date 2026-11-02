@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 // GET /api/lists?lang=uk  -> alle Listen + Einträge (fehlende Übersetzungen werden ergänzt)
 export const GET = handle(async (req) => {
-  await requireRole();
+  await requireRole("oma", "pflege");
   const lang = new URL(req.url).searchParams.get("lang");
   const [lists, items] = await Promise.all([getLists(), getItems()]);
   if (lang && lang !== "de") {
@@ -25,7 +25,7 @@ export const GET = handle(async (req) => {
 });
 
 export const POST = handle(async (req) => {
-  await requireRole();
+  await requireRole("oma");
   const { name } = await req.json();
   const n = String(name ?? "").trim().slice(0, 40);
   if (!n) return Response.json({ error: "Name fehlt" }, { status: 400 });

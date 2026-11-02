@@ -13,7 +13,7 @@ export default function Login() {
     try {
       const { role } = await api<{ role: string }>("/api/login", { method: "POST", json: { code: c } });
       const next = new URLSearchParams(location.search).get("next");
-      location.replace(next && next.startsWith("/") ? next : role === "admin" ? "/admin" : "/");
+      location.replace(next && next.startsWith("/") && !next.startsWith("//") ? next : "/");
     } catch (e) {
       setError((e as Error).message);
       setBusy(false);

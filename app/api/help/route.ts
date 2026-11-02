@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 // GET /api/help?lang=uk -> Hinweise, fehlende Übersetzungen werden ergänzt und gespeichert
 export const GET = handle(async (req) => {
-  await requireRole();
+  await requireRole("pflege");
   const lang = new URL(req.url).searchParams.get("lang");
   const help = await getHelp();
   if (lang && lang !== "de") {

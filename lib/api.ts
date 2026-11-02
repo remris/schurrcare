@@ -12,6 +12,10 @@ export async function api<T = any>(url: string, opts: RequestInit & { json?: unk
     location.href = "/login?next=" + encodeURIComponent(location.pathname);
     throw new Error("unauthorized");
   }
+  if (res.status === 403) {
+    location.href = "/";
+    throw new Error("forbidden");
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data?.error || `Fehler ${res.status}`);
   return data as T;

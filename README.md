@@ -9,6 +9,7 @@ Next.js-App (PWA) für Vercel:
   ✅ auf dem Zettel · ❓ abgehakt aber nicht gefunden · ➕ auf dem Zettel aber nicht abgehakt.
 - **Admin** (`/admin`): Listen & Einträge bearbeiten, Historie aller Einkäufe mit Kassenzettel-Foto, Suche, CSV-Export,
   Tab **Hilfe**: Hinweise für die Pflegerin schreiben (mit Übersetzungs-Vorschau).
+  Tab **Vertrag**: Vertragsseiten fotografieren oder als Bild/PDF hochladen (max. 3 MB pro Datei), ansehen, sortieren, herunterladen.
 - **Hilfe für die Pflegerin** (`/einkauf/hilfe`, ℹ️-Knopf): alle Hinweise übersetzt in ihre Sprache, deutsches Original aufklappbar.
 
 ## Was kostet was?
@@ -35,7 +36,8 @@ Next.js-App (PWA) für Vercel:
    ```
 2. Auf [vercel.com/new](https://vercel.com/new) das Repo importieren (Framework: Next.js wird erkannt).
 3. Unter **Settings → Environment Variables** setzen:
-   - `ACCESS_CODE` – Code für Oma & Pflegerin (z. B. `oma2026`)
+   - `OMA_CODE` – Code nur für Oma (z. B. `oma-sonnenblume`)
+   - `PFLEGE_CODE` – Code nur für die Pflegerin (z. B. `pflege-apfelbaum`), muss anders sein als `OMA_CODE`
    - `ADMIN_PASSWORD` – Passwort für `/admin`
    - `AUTH_SECRET` – beliebiger langer Zufallstext
    - optional `DEEPL_API_KEY`, `ANTHROPIC_API_KEY`
@@ -45,13 +47,22 @@ Next.js-App (PWA) für Vercel:
 
 ## Auf die Handys bringen
 
-Link an Oma und Pflegerin schicken: `https://DEINE-APP.vercel.app/login?code=oma2026`
+Jede bekommt ihren eigenen Link:
+
+- Oma: `https://DEINE-APP.vercel.app/login?code=OMA_CODE`
+- Pflegerin: `https://DEINE-APP.vercel.app/login?code=PFLEGE_CODE`
+
+Jede landet automatisch nur in ihrem Bereich und kommt nicht in die anderen:
+
+| | Oma | Pflegerin | Admin |
+|---|---|---|---|
+| Einträge/Listen anlegen, ändern, löschen | ✅ | – | ✅ |
+| Abhaken, Kassenzettel, Einkauf abschließen | – | ✅ | ✅ |
+| Hilfe lesen | – | ✅ | ✅ |
+| Historie, Hilfe bearbeiten | – | – | ✅ |
 
 - **Android/Chrome:** Menü ⋮ → „App installieren“ / „Zum Startbildschirm hinzufügen“
 - **iPhone/Safari:** Teilen-Symbol → „Zum Home-Bildschirm“
-
-Beim ersten Öffnen einmal „Liste schreiben“ (Oma) bzw. „Einkaufen“ (Pflegerin) wählen – das Handy merkt sich das.
-Umschalten: oben rechts ⋯ (Oma) bzw. Startseite `/?choose=1`.
 
 Der Login bleibt ca. ein Jahr gültig.
 

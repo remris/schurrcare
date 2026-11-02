@@ -5,7 +5,6 @@ export default function OmaPage() {
     <main className="page oma">
       <header className="top">
         <h1>Meine Einkaufsliste</h1>
-        <a href="/?choose=1" className="switch">Wechseln</a>
       </header>
       <ListEditor />
     </main>

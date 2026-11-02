@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import ListEditor from "@/components/ListEditor";
 import HelpEditor from "@/components/HelpEditor";
+import DocsEditor from "@/components/DocsEditor";
 import { api } from "@/lib/api";
 import type { Trip } from "@/lib/types";
 
 export default function Admin() {
-  const [tab, setTab] = useState<"lists" | "history" | "help">("lists");
+  const [tab, setTab] = useState<"lists" | "history" | "help" | "docs">("lists");
   const [role, setRole] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
@@ -27,6 +28,8 @@ export default function Admin() {
     <main className="page admin">
       <header className="top">
         <h1>Admin</h1>
+        <a className="btn small" href="/oma">Oma-Ansicht</a>
+        <a className="btn small" href="/einkauf">Pflegerin-Ansicht</a>
         <button
           className="btn"
           onClick={async () => {
@@ -41,10 +44,12 @@ export default function Admin() {
         <button className={"tab" + (tab === "lists" ? " on" : "")} onClick={() => setTab("lists")}>Listen</button>
         <button className={"tab" + (tab === "history" ? " on" : "")} onClick={() => setTab("history")}>Historie</button>
         <button className={"tab" + (tab === "help" ? " on" : "")} onClick={() => setTab("help")}>Hilfe</button>
+        <button className={"tab" + (tab === "docs" ? " on" : "")} onClick={() => setTab("docs")}>Vertrag</button>
       </div>
       {tab === "lists" && <ListEditor admin />}
       {tab === "history" && <History />}
       {tab === "help" && <HelpEditor />}
+      {tab === "docs" && <DocsEditor />}
       <Invite />
     </main>
   );
@@ -137,17 +142,50 @@ function History() {
 }
 
 function Invite() {
+  const [links, setLinks] = useState<{ oma: string | null; pflege: string | null } | null>(null);
+  const [copied, setCopied] = useState("");
+  useEffect(() => {
+    api<{ oma: string | null; pflege: string | null }>("/api/invite").then(setLinks).catch(() => {});
+  }, []);
+
+  const copy = async (key: string, url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(key);
+      setTimeout(() => setCopied(""), 2000);
+    } catch {
+      prompt("Link kopieren:", url);
+    }
+  };
+  const share = (title: string, url: string) =>
+    navigator.share ? navigator.share({ title, url }).catch(() => {}) : copy(title, url);
+
+  const row = (key: string, label: string, url: string | null | undefined, envName: string) => (
+    <div className="invite">
+      <strong>{label}</strong>
+      {url ? (
+        <>
+          <code>{url}</code>
+          <span className="row">
+            <button className="btn small" onClick={() => copy(key, url)}>{copied === key ? "✓ Kopiert" : "Kopieren"}</button>
+            <button className="btn small" onClick={() => share(label, url)}>Teilen</button>
+          </span>
+        </>
+      ) : (
+        <span className="error">In Vercel fehlt die Variable {envName}.</span>
+      )}
+    </div>
+  );
+
   return (
-    <details className="card">
-      <summary>So kommen Oma und die Pflegerin in die App</summary>
-      <p>
-        Schicke beiden diesen Link (mit eurem Zugangscode statt <code>CODE</code>):<br />
-        <code>{typeof location !== "undefined" ? location.origin : ""}/login?code=CODE</code>
+    <div className="card stack">
+      <h3>Links für die Handys</h3>
+      {row("oma", "👵 Link für Oma", links?.oma, "OMA_CODE")}
+      {row("pflege", "🛒 Link für die Pflegerin", links?.pflege, "PFLEGE_CODE")}
+      <p className="muted small-text">
+        Link auf dem jeweiligen Handy öffnen, dann im Browser „App installieren“ bzw. „Zum Home-Bildschirm“ wählen.
+        Jede landet automatisch nur in ihrem eigenen Bereich.
       </p>
-      <p>
-        Danach im Handy-Browser „Zum Startbildschirm hinzufügen“ bzw. „App installieren“ wählen. Beim ersten Öffnen
-        wählt man einmal „Liste schreiben“ (Oma) oder „Einkaufen“ (Pflegerin).
-      </p>
-    </details>
+    </div>
   );
 }

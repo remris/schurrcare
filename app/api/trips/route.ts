@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 // Einkauf abschließen: abgehakte Einträge wandern in die Historie
 export const POST = handle(async (req) => {
-  await requireRole();
+  await requireRole("pflege");
   const body = await req.json();
   const list = await getList(String(body.listId));
   if (!list) return Response.json({ error: "Liste fehlt" }, { status: 400 });

@@ -5,12 +5,12 @@ import { handle, requireRole } from "@/lib/auth";
 export const maxDuration = 60;
 
 export const GET = handle(async () => {
-  await requireRole();
+  await requireRole("pflege");
   return Response.json({ available: !!process.env.ANTHROPIC_API_KEY });
 });
 
 export const POST = handle(async (req) => {
-  await requireRole();
+  await requireRole("pflege");
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return Response.json({ available: false });
   const { image, items } = (await req.json()) as { image: string; items: { id: string; text: string }[] };

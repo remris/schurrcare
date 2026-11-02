@@ -1,4 +1,4 @@
-export type Role = "family" | "admin";
+export type Role = "oma" | "pflege" | "admin";
 
 export interface ShopList {
   id: string;
@@ -49,4 +49,20 @@ export interface HelpEntry {
   order: number;
   updatedAt: string;
   translations: Record<string, { title: string; text: string }>;
+}
+
+export interface DocPage {
+  id: string;
+  type: "image" | "pdf";
+  name: string;
+  size: number; // Bytes
+  addedAt: string;
+}
+
+export interface Doc {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  pages: DocPage[];
 }

@@ -12,6 +12,7 @@ interface Store {
   lrange(key: string, start: number, stop: number): Promise<string[]>;
   get(key: string): Promise<string | null>;
   set(key: string, value: string): Promise<void>;
+  del(key: string): Promise<void>;
 }
 
 const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -43,6 +44,9 @@ function redisStore(): Store {
     },
     async set(k, v) {
       await r.set(k, v);
+    },
+    async del(k) {
+      await r.del(k);
     },
   };
 }
@@ -89,6 +93,7 @@ function fileStore(): Store {
     lrange: (k, s, e) => tx((db) => (db.l[k] ?? []).slice(s, e === -1 ? undefined : e + 1)),
     get: (k) => tx((db) => db.s[k] ?? null),
     set: (k, v) => tx((db) => void (db.s[k] = v)),
+    del: (k) => tx((db) => void delete db.s[k]),
   };
 }
 
