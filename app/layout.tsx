@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import SwRegister from "@/components/SwRegister";
+import { Atkinson_Hyperlegible } from "next/font/google";
+
+// Schrift, die speziell für gute Lesbarkeit (auch bei Sehschwäche) entwickelt wurde
+const font = Atkinson_Hyperlegible({ subsets: ["latin", "latin-ext"], weight: ["400", "700"], variable: "--font-main", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Einkaufsliste",
@@ -16,12 +20,12 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#2f6b4f",
+  themeColor: "#f4f5f2",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de">
+    <html lang="de" className={font.variable}>
       <body>
         {children}
         <SwRegister />

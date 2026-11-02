@@ -74,6 +74,8 @@ export default function ListEditor({ admin = false }: { admin?: boolean }) {
   };
 
   const shown = items.filter((i) => i.listId === active);
+  const open = shown.filter((i) => !i.bought);
+  const done = shown.filter((i) => i.bought);
   const openCount = (id: string) => items.filter((i) => i.listId === id && !i.bought).length;
 
   return (
@@ -86,7 +88,7 @@ export default function ListEditor({ admin = false }: { admin?: boolean }) {
           </button>
         ))}
         <button className="tab ghost" onClick={() => setManage((m) => !m)} aria-label="Listen bearbeiten">
-          ✎
+          {manage ? "✕ Fertig" : "✎ Listen"}
         </button>
       </div>
 
@@ -94,6 +96,7 @@ export default function ListEditor({ admin = false }: { admin?: boolean }) {
 
       {error && <p className="error">{error}</p>}
 
+      {active && <p className="section-label">Neu auf die Liste</p>}
       {active && (
         <form
           className="addbar"
@@ -105,7 +108,7 @@ export default function ListEditor({ admin = false }: { admin?: boolean }) {
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Was soll gekauft werden?"
+            placeholder="z. B. Brot"
             enterKeyHint="done"
             autoCapitalize="sentences"
           />
@@ -117,27 +120,35 @@ export default function ListEditor({ admin = false }: { admin?: boolean }) {
 
       {speech.supported && active && (
         <button className={"mic" + (speech.listening ? " live" : "")} onClick={speech.toggle}>
-          {speech.listening ? "🔴 Ich höre zu … (tippen zum Stoppen)" : "🎤 Sprechen"}
-          <small>{speech.listening ? "" : "z. B. „Brot, Milch und Butter“"}</small>
+          <span aria-hidden>{speech.listening ? "🔴" : "🎤"}</span>
+          <span>
+            {speech.listening ? "Ich höre zu …" : "Sprechen statt tippen"}
+            <small>{speech.listening ? "Zum Beenden nochmal tippen" : "z. B. „Brot, Milch und Butter“"}</small>
+          </span>
         </button>
       )}
 
+      {active && (
+        <p className="section-label">
+          Auf der Liste{open.length ? ` · ${open.length}` : ""}
+        </p>
+      )}
       <ul className="items">
         {shown.length === 0 && <li className="empty">Diese Liste ist leer.</li>}
-        {shown.map((it) => (
+        {[...open, ...done].map((it) => (
           <li key={it.id} className={"item" + (it.bought ? " done" : "")}>
             {admin ? (
               <input type="checkbox" checked={it.bought} onChange={() => toggle(it)} className="check small" />
             ) : null}
             <span className="itext">
-              {it.text}
+              <span className="name">{it.text}</span>
               {it.bought && <em className="tag">✓ gekauft</em>}
               {admin && Object.keys(it.translations ?? {}).length > 0 && (
                 <small className="muted"> · {Object.entries(it.translations).map(([k, v]) => `${k}: ${v}`).join(" · ")}</small>
               )}
             </span>
             <button className="del" onClick={() => remove(it.id)} aria-label={`${it.text} löschen`}>
-              ✕
+              {admin ? "✕" : "Löschen"}
             </button>
           </li>
         ))}

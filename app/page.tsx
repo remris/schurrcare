@@ -32,16 +32,23 @@ export default function Home() {
   if (!ready) return <main className="page center"><p className="muted">…</p></main>;
   return (
     <main className="page center">
-      <h1 className="logo">🧺 Einkaufsliste</h1>
+      <div className="logo-mark">🧺</div>
+      <h1 className="logo">Einkaufsliste</h1>
       <p className="muted">Wer benutzt dieses Handy?</p>
       <div className="stack wide">
         <button className="big" onClick={() => pick("oma")}>
-          👵 Liste schreiben
-          <small>für Oma</small>
+          <span className="ico">✍️</span>
+          <span>
+            Liste schreiben
+            <small>für Oma</small>
+          </span>
         </button>
         <button className="big alt" onClick={() => pick("pflege")}>
-          🛒 Einkaufen · Покупки · Zakupy
-          <small>für die Pflegerin</small>
+          <span className="ico">🛒</span>
+          <span>
+            Einkaufen · Покупки · Zakupy
+            <small>für die Pflegerin</small>
+          </span>
         </button>
       </div>
     </main>

@@ -28,7 +28,8 @@ export default function Login() {
 
   return (
     <main className="page center">
-      <h1 className="logo">🧺 Einkaufsliste</h1>
+      <div className="logo-mark">🧺</div>
+      <h1 className="logo">Einkaufsliste</h1>
       <form
         className="card stack"
         onSubmit={(e) => {
